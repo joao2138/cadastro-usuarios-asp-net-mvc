@@ -3,6 +3,14 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Ignora todos os arquivos de banco de dados SQLite
+*.db
+
+# Ignora os arquivos de log do SQLite (Write-Ahead Log)
+*.db-wal
+*.db-shm
+
+
 # User-specific files
 *.rsuser
 *.suo
