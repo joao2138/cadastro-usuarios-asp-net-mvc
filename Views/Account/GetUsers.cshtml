@@ -3,7 +3,7 @@
 @{
    ViewData["Title"] = "Lista de Usuários";
 
-   bool podeVerDetalhes = User.Identity?.IsAuthenticated == true && User.IsInRole("admin");
+   bool isAdmin = User.Identity?.IsAuthenticated == true && User.IsInRole("admin");
 }
 
 <div class="container mt-5">
@@ -13,7 +13,7 @@
       <table class="table table-bordered table-striped text-center align-middle">
          <thead class="table-dark">
             <tr>
-               @if (podeVerDetalhes)
+               @if (isAdmin)
                {
                   <th>ID</th>
                   <th>Email</th>
@@ -29,7 +29,7 @@
                foreach (var user in Model)
                {
                   <tr>
-                     @if (podeVerDetalhes)
+                     @if (isAdmin)
                      {
                         <td>@user.Id</td>
                         <td>@user.Email</td>
@@ -43,7 +43,7 @@
             else
             {
                <tr>
-                  <td colspan="@(podeVerDetalhes ? 5 : 3)" class="text-muted">
+                  <td colspan="@(isAdmin ? 5 : 3)" class="text-muted">
                      Nenhum usuário encontrado.
                   </td>
                </tr>
