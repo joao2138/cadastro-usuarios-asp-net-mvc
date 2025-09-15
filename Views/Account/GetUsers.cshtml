@@ -1,0 +1,54 @@
+﻿
+@model IEnumerable<UserViewModel>
+@{
+   ViewData["Title"] = "Lista de Usuários";
+
+   bool podeVerDetalhes = User.Identity?.IsAuthenticated == true && User.IsInRole("admin");
+}
+
+<div class="container mt-5">
+   <h2 class="text-center mb-4">Lista de Usuários</h2>
+
+   <div class="table-responsive">
+      <table class="table table-bordered table-striped text-center align-middle">
+         <thead class="table-dark">
+            <tr>
+               @if (podeVerDetalhes)
+               {
+                  <th>ID</th>
+                  <th>Email</th>
+               }
+               <th>Nome de Usuário</th>
+               <th>Tipo de Usuário</th>
+               <th>Criado em</th>
+            </tr>
+         </thead>
+         <tbody>
+            @if (Model != null && Model.Any())
+            {
+               foreach (var user in Model)
+               {
+                  <tr>
+                     @if (podeVerDetalhes)
+                     {
+                        <td>@user.Id</td>
+                        <td>@user.Email</td>
+                     }
+                     <td>@user.UserName</td>
+                     <td>@user.UserType</td>
+                     <td>@user.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                  </tr>
+               }
+            }
+            else
+            {
+               <tr>
+                  <td colspan="@(podeVerDetalhes ? 5 : 3)" class="text-muted">
+                     Nenhum usuário encontrado.
+                  </td>
+               </tr>
+            }
+         </tbody>
+      </table>
+   </div>
+</div>

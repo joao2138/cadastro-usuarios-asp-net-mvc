@@ -1,0 +1,45 @@
+﻿@model UserViewModel
+@{
+   ViewData["Title"] = "Atualizar Usuário";
+}
+
+<div class="container mt-5">
+   <h2 class="text-center mb-4">Atualizar Usuário</h2>
+
+   <form method="post" class="mx-auto" style="max-width: 500px;">
+      <div class="mb-3">
+         <label asp-for="Id" class="form-label"></label>
+         <input asp-for="Id" class="form-control" readonly />
+      </div>
+
+      <div class="mb-3">
+         <label asp-for="UserName" class="form-label"></label>
+         <input asp-for="UserName" class="form-control" />
+         <span asp-validation-for="UserName" class="text-danger"></span>
+      </div>
+
+      <div class="mb-3">
+         <label asp-for="Email" class="form-label"></label>
+         <input asp-for="Email" class="form-control" />
+         <span asp-validation-for="Email" class="text-danger"></span>
+      </div>
+
+      <div class="mb-3">
+         <label asp-for="CreatedAt" class="form-label"></label>
+         <input asp-for="CreatedAt" type="datetime-local" class="form-control" />
+         <span asp-validation-for="CreatedAt" class="text-danger"></span>
+      </div>
+
+      <div class="mb-3">
+         <label asp-for="UserType" class="form-label"></label>
+         <input asp-for="UserType" class="form-control" />
+         <span asp-validation-for="UserType" class="text-danger"></span>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">Salvar Alterações</button>
+   </form>
+</div>
+
+@section Scripts {
+   <partial name="_ValidationScriptsPartial" />
+}
