@@ -115,7 +115,7 @@ namespace WebApplicationMVC.repositories
 
 
 
-      public async Task<UserViewModel?> GetUser(string userId)
+      public async Task<UserViewModel?> GetUserById(string userId)
       {
          using var conn = _db.NewConnection();
 
@@ -140,7 +140,7 @@ namespace WebApplicationMVC.repositories
 
 
 
-      public async Task<UserViewModel?> GetUser(string userId, SqliteConnection conn)
+      public async Task<UserViewModel?> GetUserById(string userId, SqliteConnection conn)
       {
          const string sql =
          """

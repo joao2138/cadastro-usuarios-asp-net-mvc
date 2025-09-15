@@ -46,7 +46,7 @@ namespace WebApplicationMVC.Controllers
          }
 
 
-         var userModel = new UserModel
+         UserModel userModel = new()
          {
             Id = Guid.NewGuid(),
             UserName = userRegister.UserName,
@@ -55,6 +55,7 @@ namespace WebApplicationMVC.Controllers
             CreatedAt = DateTime.Now,
             UserType = userRegister.UserType
          };
+
 
          var result = await _userRepository.CreateUser(userModel);
 

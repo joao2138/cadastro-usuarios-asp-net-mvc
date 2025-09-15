@@ -11,7 +11,7 @@ namespace WebApplicationMVC.repositories
 
       public Task<OneOf<UserViewModel, AppError>> Login(UserLoginModel userLogin);
 
-      public Task<UserViewModel?> GetUser(string userId, SqliteConnection conn);
+      public Task<UserViewModel?> GetUserById(string userId, SqliteConnection conn);
 
 
       public Task SaveRefreshToken(

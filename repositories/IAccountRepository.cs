@@ -14,7 +14,7 @@ namespace WebApplicationMVC.repositories
 
 
 
-      public Task<UserViewModel?> GetUser(string userId);
+      public Task<UserViewModel?> GetUserById(string userId);
 
 
 

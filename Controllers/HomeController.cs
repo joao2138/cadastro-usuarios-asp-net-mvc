@@ -15,6 +15,8 @@ namespace WebApplicationMVC.Controllers
          return View();
       }
 
+
+
       public IActionResult Privacy()
       {
          return View();
@@ -30,5 +32,6 @@ namespace WebApplicationMVC.Controllers
       {
          return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
       }
+
    }
 }

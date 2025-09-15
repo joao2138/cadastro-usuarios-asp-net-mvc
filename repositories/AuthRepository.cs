@@ -39,7 +39,7 @@ namespace WebApplicationMVC.repositories
 
          if (passwordHash != null && id != null && PasswordHash.Compare(passwordHash, userLogin.Password))
          {
-            var user = await GetUser(id, conn);
+            var user = await GetUserById(id, conn);
 
             if (user is not null)
             {
@@ -54,7 +54,7 @@ namespace WebApplicationMVC.repositories
 
 
 
-      public async Task<UserViewModel?> GetUser(string userId, SqliteConnection conn)
+      public async Task<UserViewModel?> GetUserById(string userId, SqliteConnection conn)
       {
          const string sql =
          """
@@ -189,7 +189,7 @@ namespace WebApplicationMVC.repositories
 
          if (isValid)
          {
-            return await GetUser(userId, conn);
+            return await GetUserById(userId, conn);
          }
 
          return null;

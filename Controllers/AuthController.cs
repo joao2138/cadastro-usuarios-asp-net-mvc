@@ -79,7 +79,7 @@ namespace WebApplicationMVC.Controllers
          HttpContext.Response.Cookies.Delete(Consts.UserId, CookieOpts);
          HttpContext.Response.Cookies.Delete(Consts.IsAuthenticatedCookie);
 
-         var userId = User.Claims.FirstOrDefault(x => x.Type == Consts.UserId)?.Value;
+         string? userId = User.Claims.FirstOrDefault(x => x.Type == Consts.UserId)?.Value;
 
          if (userId is null) return RedirectToAction("LoginPage", "Account");
 
@@ -95,8 +95,8 @@ namespace WebApplicationMVC.Controllers
       [HttpPost, HttpGet]
       public async Task<IActionResult> Refresh(string? route = null)
       {
-         var refreshToken = Request.Cookies[Consts.RefreshToken] ?? string.Empty;
-         var userId = Request.Cookies[Consts.UserId] ?? string.Empty;
+         string refreshToken = Request.Cookies[Consts.RefreshToken] ?? string.Empty;
+         string userId = Request.Cookies[Consts.UserId] ?? string.Empty;
 
 
          if (refreshToken.Length < 45 || userId.Length < 33)
@@ -107,7 +107,7 @@ namespace WebApplicationMVC.Controllers
          }
 
 
-         var user = await _authRepository.ValidateRefreshToken(userId, refreshToken);
+         UserViewModel? user = await _authRepository.ValidateRefreshToken(userId, refreshToken);
 
 
          if (user is null)
@@ -127,7 +127,7 @@ namespace WebApplicationMVC.Controllers
          }
 
 
-         var newRefreshToken = _tokenGenerator.CreateRefreshToken();
+         string newRefreshToken = _tokenGenerator.CreateRefreshToken();
 
          await _authRepository.SaveRefreshToken(userId, newRefreshToken);
 
