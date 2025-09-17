@@ -108,8 +108,8 @@
                <label for="UserType" class="form-label">Tipo de Usuário<span class="color-red">*</span></label>
                <select name="UserType" id="UserType" class="form-select" required>
                   <option value="">Selecione...</option>
-                  <option value="admin" selected="@(Model?.Register?.UserType == "admin")">Administrador</option>
-                  <option value="user" selected="@(Model?.Register?.UserType == "user")">Usuario</option>
+                  <option value="admin" selected="@(Model?.Register?.UserType == "admin")" >Administrador</option>
+                  <option value="user" selected="@(Model?.Register?.UserType == "user")" >Usuario</option>
                </select>
             </div>
 
@@ -131,41 +131,15 @@
 </div>
 
 
-<!--mensagens de erro-->
-<div id="toastBar" class="toast-bar-container" style="display:none;">
-   <ul id="toastMessages" class="toast-bar-list"></ul>
-</div>
-
-
-
-
 
 @section Scripts {
    @{
       await Html.RenderPartialAsync("_ValidationScriptsPartial");
    }
 
-   @{
-      var tempErrors = TempData[nameof(AppError.Errors)] as IEnumerable<string> ?? Enumerable.Empty<string>();
-
-      var modelStateErrors = ViewData.ModelState.Values
-          .SelectMany(v => v.Errors)
-          .Select(e => e.ErrorMessage);
-
-      var concatErrors = tempErrors.Concat(modelStateErrors).Take(4);
-
-      var errorJson = JavaScriptEncoder.Default.Encode(JsonSerializer.Serialize(concatErrors));
-   }
-
-
-
    <script type="text/javascript" src="~/js/loginPage.js"></script>
    <script type="text/javascript" src="~/js/loginPageFormVerify.js"></script>
-
-   <script>
-      main('@Html.Raw(errorJson)');
-   </script>
-
+   
 }
 
 

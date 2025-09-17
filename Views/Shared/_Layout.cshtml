@@ -1,4 +1,5 @@
-﻿@using WebApplicationMVC.data
+﻿@using System.Text.Json
+@using WebApplicationMVC.data
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -8,12 +9,24 @@
    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
    <link rel="stylesheet" href="~/WebApplicationMVC.styles.css" asp-append-version="true" />
+   <link rel="stylesheet" href="~/css/toastBarCSS.css" />
 
    @RenderSection("Styles", required: false)
 
-
 </head>
 <body>
+
+   @{
+      var messages = TempData[Consts.InfoMessage] as IEnumerable<string> ?? Enumerable.Empty<string>();
+
+      var modelStateErrors = ViewData.ModelState.Values
+      .SelectMany(v => v.Errors)
+      .Select(e => e.ErrorMessage);
+
+      var allMessages = messages.Concat(modelStateErrors).Take(4);
+   }
+
+
    <header>
       <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
          <div class="container-fluid">
@@ -35,16 +48,21 @@
                   </li>
                </ul>
                <div class="loginSection">
+                  @{
+                     var path = Context.Request.Path;
+
+                     var isLoginPage = path.StartsWithSegments("/account/loginpage", StringComparison.OrdinalIgnoreCase) || path.StartsWithSegments("/auth/login", StringComparison.OrdinalIgnoreCase);
+                  }
                   @if (User?.Identity?.IsAuthenticated ?? false)
                   {
                      <div class="d-flex align-items-center">
-                        <span class="me-2">Olá, @(User.Claims.FirstOrDefault(x => x.Type == Consts.UserName)?.Value)</span>
+                        <a class="text-black text-decoration-none" href="/account/UserProfile"><span class="me-2">Olá, @(User.Claims.FirstOrDefault(x => x.Type == Consts.UserName)?.Value)</span></a>
                         <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#logoutModal">
                            Logout
                         </button>
                      </div>
                   }
-                  else if (!Context.Request.Path.StartsWithSegments("/account/loginpage", StringComparison.OrdinalIgnoreCase))
+                  else if (!isLoginPage)
                   {
                      <a class="btn btn-outline-primary btn-sm rounded-3" asp-controller="Account" asp-action="LoginPage">Login</a>
                   }
@@ -82,7 +100,7 @@
       </div>
    </div>
 
-   
+
 
    <script src="~/js/tryRenewSession.js"></script>
    <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -90,5 +108,15 @@
    <script src="~/js/site.js" asp-append-version="true"></script>
 
    @await RenderSectionAsync("Scripts", required: false)
+
+
+   <!-- ToastBar -->
+   <div id="toastBar"
+        class="toast-bar-container"
+        style="display:none;"
+        data-errors='@Html.Raw(JsonSerializer.Serialize(allMessages))'>
+      <ul id="toastMessages" class="toast-bar-list"></ul>
+   </div>
+
 </body>
 </html>

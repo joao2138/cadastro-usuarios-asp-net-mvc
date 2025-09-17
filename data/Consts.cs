@@ -12,6 +12,8 @@
 
       public const string IsAuthenticatedCookie = "auth.isAuthenticated";
 
+      public const string InfoMessage = "info-message";
+
       public static DateTime GetCookieExpires() => DateTime.UtcNow.AddDays(7);
    }
 }

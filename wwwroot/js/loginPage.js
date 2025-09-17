@@ -1,18 +1,9 @@
-﻿
-function main(errosJson = null) {
-   document.addEventListener("DOMContentLoaded", function () {
-      if (errosJson != null && errosJson != "[]")
-      {
-         setTimeout(() => {
-            showMessageError(errosJson);
-         }, 300);
-      }
-      
+﻿document.addEventListener("DOMContentLoaded", function () {
 
-      btnToggleHiddenState();
+   btnToggleHiddenState();
 
-   });
-}
+});
+
 
 
 
@@ -53,33 +44,33 @@ function btnToggleHiddenState() {
 }
 
 
-function showMessageError(errosJson = null) {
-   const errorMessages = Array.from(JSON.parse(errosJson ?? "[]"));
+//function showMessageError(errosJson = null) {
+//   const errorMessages = Array.from(JSON.parse(errosJson ?? "[]"));
 
 
-   if (errorMessages.length > 0) {
-      try {
-         const toastBar = document.getElementById("toastBar");
-         const toastMessages = document.getElementById("toastMessages");
+//   if (errorMessages.length > 0) {
+//      try {
+//         const toastBar = document.getElementById("toastBar");
+//         const toastMessages = document.getElementById("toastMessages");
 
-         toastMessages.innerHTML = "";
-         errorMessages.forEach(msg => {
-            const li = document.createElement("li");
-            li.textContent = msg;
-            toastMessages.appendChild(li);
-         });
+//         toastMessages.innerHTML = "";
+//         errorMessages.forEach(msg => {
+//            const li = document.createElement("li");
+//            li.textContent = msg;
+//            toastMessages.appendChild(li);
+//         });
 
-         toastBar.style.display = "block";
+//         toastBar.style.display = "block";
 
-         setTimeout(() => {
-            toastBar.style.display = "none";
-         }, 6000);
-      } catch (e) {
-         console.error("Erro ao exibir mensagens:", e);
-      }
-   }
+//         setTimeout(() => {
+//            toastBar.style.display = "none";
+//         }, 6000);
+//      } catch (e) {
+//         console.error("Erro ao exibir mensagens:", e);
+//      }
+//   }
 
-}
+//}
 
 
 
