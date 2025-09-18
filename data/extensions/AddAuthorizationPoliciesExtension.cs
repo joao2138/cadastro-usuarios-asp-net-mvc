@@ -1,4 +1,4 @@
-﻿namespace WebApplicationMVC.data
+﻿namespace WebApplicationMVC.data.extensions
 {
    public static class AddAuthorizationPoliciesExtension
    {

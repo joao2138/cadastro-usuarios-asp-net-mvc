@@ -2,20 +2,15 @@
 @using System.Text.Encodings.Web
 @using WebApplicationMVC.Models.request
 @using WebApplicationMVC.data
-@model UpdateUserModel?
+@model UpdateUserModel
 @{
-   ViewData["Title"] = "Atualizar Usuário";
-
+   ViewData["Title"] = $"Atualizando {@Model?.UserName}";
 }
 
 <div class="container mt-5">
-   <h2 class="text-center mb-4">Atualizar Usuário</h2>
+   <h2 class="text-center mb-4">Atualizando @Model?.UserName</h2>
 
-   <form method="post" asp-route="/account/admin/updateUser" class="mx-auto" style="max-width: 500px;">
-      <div class="mb-3">
-         <label asp-for="Id" class="form-label">Id de usuário</label>
-         <input asp-for="Id" class="form-control" readonly />
-      </div>
+   <form method="post" asp-route="/account/UpdateUserProfile" class="mx-auto" style="max-width: 500px;">
 
       <div class="mb-3">
          <label asp-for="UserName" class="form-label">Nome de usuário</label>
@@ -35,15 +30,6 @@
          <span asp-validation-for="CreatedAt" class="text-danger"></span>
       </div>
 
-      <div class="mb-3">
-         <label asp-for="UserType" class="form-label">Tipo de conta de usuário</label>
-         <select name="UserType" id="UserType" class="form-select" required>
-            <option value="">Selecione...</option>
-            <option value="admin" selected="@(Model?.UserType == "admin")">Administrador</option>
-            <option value="user" selected="@(Model?.UserType == "user")">Usuario</option>
-         </select>
-         <span asp-validation-for="UserType" class="text-danger"></span>
-      </div>
 
       <button type="submit" class="btn btn-primary w-100">Salvar Alterações</button>
    </form>

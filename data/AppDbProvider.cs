@@ -49,7 +49,7 @@ namespace WebApplicationMVC.data
                """
                   CREATE TABLE IF NOT EXISTS `users` (
                   id                CHAR(36) NOT NULL PRIMARY KEY,
-                  user_name         VARCHAR(80) COLLATE BINARY NOT NULL UNIQUE,
+                  user_name         VARCHAR(80) COLLATE NOCASE NOT NULL UNIQUE,
                   email             VARCHAR(80) COLLATE NOCASE DEFAULT NULL UNIQUE,
                   password_hash     CHAR(60) NOT NULL,
                   created_at        DATETIME NOT NULL,

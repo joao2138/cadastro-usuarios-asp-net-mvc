@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 
-namespace WebApplicationMVC.data
+namespace WebApplicationMVC.data.extensions
 {
    public static class AddServiceAuthenticatorExtension
    {

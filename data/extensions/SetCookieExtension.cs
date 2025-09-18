@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using WebApplicationMVC.Models;
 
-namespace WebApplicationMVC.data
+namespace WebApplicationMVC.data.extensions
 {
    public static class SetCookieExtension
    {

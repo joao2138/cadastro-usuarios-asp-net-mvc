@@ -84,6 +84,7 @@ namespace WebApplicationMVC.repositories
            """
             INSERT INTO refresh_tokens (user_id, expires, token)
             VALUES (@userId, @expires, @token)
+
             ON CONFLICT (user_id)
             DO UPDATE SET
                 expires = excluded.expires,

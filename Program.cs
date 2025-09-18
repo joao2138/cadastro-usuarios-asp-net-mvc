@@ -1,4 +1,5 @@
 using WebApplicationMVC.data;
+using WebApplicationMVC.data.extensions;
 using WebApplicationMVC.repositories;
 
 var builder = WebApplication.CreateBuilder(args);

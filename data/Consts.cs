@@ -15,5 +15,8 @@
       public const string InfoMessage = "info-message";
 
       public static DateTime GetCookieExpires() => DateTime.UtcNow.AddDays(7);
+
+
+      public static readonly List<string> UserTypes = ["admin", "user"];
    }
 }

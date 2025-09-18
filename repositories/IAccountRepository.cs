@@ -18,5 +18,11 @@ namespace WebApplicationMVC.repositories
 
 
 
+      public Task<OneOf<int, AppError>> UpdateUser(string userId, UpdateUserModel updateUser);
+
+
+
+      public Task<OneOf<int, AppError>> UpdateUserPassword(string userId, UpdateUserPasswordModel passwordModel);
+
    }
 }

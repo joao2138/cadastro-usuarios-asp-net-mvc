@@ -1,0 +1,26 @@
+﻿@model UserViewModel? 
+
+@{
+   ViewData["Title"] = $"Perfil de {Model?.UserName}";
+}
+
+
+<div class="container mt-5">
+   <div class="card shadow-sm">
+      <div class="card-body">
+         <h2 class="card-title text-primary">Perfil de @Model?.UserName</h2>
+         <hr />
+
+         <p><strong>👤 Nome de usuário:</strong> @Model?.UserName</p>
+         <p><strong>📧 Email:</strong> @Model?.Email</p>
+         <p><strong>📅 Data de criação de conta:</strong> @Model?.CreatedAt.ToString("dd/MM/yyyy")</p>
+
+         <div class="mt-4 gap-4 d-flex">
+            <a asp-action="UpdatePassword" asp-controller="Account" class="btn btn-outline-secondary">Alterar senha</a>
+            <a asp-action="UpdateUserProfile" asp-controller="Account" class="btn btn-outline-info">Atualizar perfil</a>
+
+         </div>
+      </div>
+   </div>
+</div>
+

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApplicationMVC.data;
+using WebApplicationMVC.data.extensions;
 using WebApplicationMVC.Models;
 using WebApplicationMVC.Models.request;
 using WebApplicationMVC.repositories;
@@ -62,7 +63,7 @@ namespace WebApplicationMVC.Controllers
 
          AppError appError = result.AsT1;
 
-         TempData[nameof(AppError.Errors)] = appError.Errors;
+         TempData[Consts.InfoMessage] = appError.Errors;
 
 
          return
@@ -112,7 +113,7 @@ namespace WebApplicationMVC.Controllers
 
          if (user is null)
          {
-            TempData[nameof(AppError.Errors)] = new List<string>
+            TempData[Consts.InfoMessage] = new List<string>
             {
                "Não foi possivel renovar a sessão",
             };
