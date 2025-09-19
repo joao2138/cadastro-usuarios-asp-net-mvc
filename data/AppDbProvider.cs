@@ -59,7 +59,9 @@ namespace WebApplicationMVC.data
                   CREATE TABLE IF NOT EXISTS `refresh_tokens`(
                   user_id     CHAR(36) NOT NULL PRIMARY KEY,
                   expires     DATETIME NOT NULL,
-                  token       CHAR(48) NOT NULL
+                  token       CHAR(48) NOT NULL,
+
+                  CONSTRAINT FK_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
                   );
                 """,
                transaction: transaction

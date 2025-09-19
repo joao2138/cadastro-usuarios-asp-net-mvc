@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
+﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace WebApplicationMVC.data.extensions
 {
@@ -15,7 +14,7 @@ namespace WebApplicationMVC.data.extensions
             {
                messages = enumerable.Append(message);
             }
-            
+
          }
 
 
