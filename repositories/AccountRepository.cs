@@ -1,4 +1,6 @@
-﻿using Dapper;
+﻿using System.Data;
+using System.Transactions;
+using Dapper;
 using Microsoft.Data.Sqlite;
 using OneOf;
 using WebApplicationMVC.data;
@@ -40,7 +42,7 @@ namespace WebApplicationMVC.repositories
             user.CreatedAt
          };
 
-         var transaction = await conn.BeginTransactionAsync();
+         using var transaction = await conn.BeginTransactionAsync();
 
          try
          {
@@ -168,7 +170,7 @@ namespace WebApplicationMVC.repositories
          List<string> updateParts = new(3);
 
          if (!string.IsNullOrWhiteSpace(updateUser.UserName)) updateParts.Add("user_name = @UserName");
-         if (!string.IsNullOrWhiteSpace(updateUser.Email))    updateParts.Add("email = @Email");
+         if (updateUser.Email is not null) updateParts.Add("email = @Email");
          if (!string.IsNullOrWhiteSpace(updateUser.UserType)) updateParts.Add("user_type = @UserType");
 
          if (updateParts.Count == 0) return new AppError(["Pelo menos 1 campo deve ser preenchido"]);
@@ -189,7 +191,7 @@ namespace WebApplicationMVC.repositories
 
          await conn.OpenAsync();
 
-         var transaction = await conn.BeginTransactionAsync();
+         using var transaction = await conn.BeginTransactionAsync();
 
          try
          {
@@ -242,6 +244,8 @@ namespace WebApplicationMVC.repositories
 
 
 
+
+
       public async Task<OneOf<int, AppError>> UpdateUserPassword(string userId, UpdateUserPasswordModel passwordModel)
       {
          const string sql =
@@ -256,21 +260,14 @@ namespace WebApplicationMVC.repositories
 
          await conn.OpenAsync();
 
-         var transaction = await conn.BeginTransactionAsync();
+         using var transaction = await conn.BeginTransactionAsync();
 
          try
          {
-            var currentHash = await conn.QuerySingleAsync<string>(
-               """
-               SELECT password_hash FROM users
-               WHERE id = @userId
-               """,
-               new { userId },
-               transaction
-            );
+            bool passwordIsCorrect =
+                  await ComparePassword(userId, passwordModel.OldPassword, conn, transaction);
 
-
-            if (currentHash is null || !PasswordHash.Compare(currentHash, passwordModel.OldPassword))
+            if (!passwordIsCorrect)
             {
                return new AppError(["A antiga senha não confere"]);
             }
@@ -310,6 +307,144 @@ namespace WebApplicationMVC.repositories
 
 
       }
-   
+
+
+
+
+
+      public async Task<OneOf<int, AppError>> AdminDeleteUserAccount(
+         string idToDelete,
+         DeleteAccountModel deleteUser,
+         string adminId)
+      {
+         using var conn = _db.NewConnection();
+
+         await conn.OpenAsync();
+
+         using var transaction = await conn.BeginTransactionAsync();
+
+         int rows = 0;
+
+         try
+         {
+
+            if (!await ComparePassword(adminId, deleteUser.Password, conn, transaction))
+            {
+               return new AppError(["A senha do administrador está incorreta"]);
+            }
+
+            rows = await DeleteUser(idToDelete, conn, transaction);
+
+            if (rows == 1)
+            {
+               await transaction.CommitAsync();
+               return rows;
+            }
+
+
+            await transaction.RollbackAsync();
+            return new AppError(["Ocorreu um erro ao deletar a conta do usuário"]);
+
+         }
+         catch (Exception e)
+         {
+            Console.WriteLine($"Exception {nameof(AdminDeleteUserAccount)}\n");
+            Console.WriteLine(e);
+
+            return new AppError(["Ocorreu um erro ao deletar a conta do usuário"]);
+         }
+
+         
+      }
+
+
+
+
+      public async Task<OneOf<int, AppError>> DeleteUserAccount(string idToDelete, DeleteAccountModel deleteUser)
+      {
+         using var conn = _db.NewConnection();
+
+         await conn.OpenAsync();
+
+         using var transaction = await conn.BeginTransactionAsync();
+
+         int rows = 0;
+
+         try
+         {
+
+            if (!await ComparePassword(idToDelete, deleteUser.Password, conn, transaction))
+            {
+               return new AppError(["A senha está incorreta"]);
+            }
+
+            rows = await DeleteUser(idToDelete, conn, transaction);
+
+            if (rows == 1)
+            {
+               await transaction.CommitAsync();
+               return rows;
+            }
+
+
+            await transaction.RollbackAsync();
+            return new AppError(["Ocorreu um erro ao deletar a conta do usuário"]);
+
+         }
+         catch (Exception e)
+         {
+            Console.WriteLine($"Exception {nameof(DeleteUserAccount)}\n");
+            Console.WriteLine(e);
+
+            return new AppError(["Ocorreu um erro ao deletar a conta do usuário"]);
+         }
+
+
+      }
+
+
+
+
+      private static async Task<int> DeleteUser(
+         string userId,
+         IDbConnection conn,
+         IDbTransaction transaction)
+      {
+         const string sql =
+         """
+           DELETE FROM users
+           WHERE id = @userId
+          """;
+
+         return await conn.ExecuteAsync(sql, new { userId }, transaction);
+      }
+
+
+
+      private static async Task<bool> ComparePassword(
+         string userId,
+         string userPassword,
+         IDbConnection conn,
+         IDbTransaction? transaction = null)
+      {
+         var currentHash = await conn.QuerySingleAsync<string>(
+            """
+            SELECT password_hash FROM users
+            WHERE id = @userId
+            """,
+            new { userId },
+            transaction
+         );
+
+
+         if (currentHash is null || !PasswordHash.Compare(currentHash, userPassword))
+         {
+            return false;
+         }
+
+         return true;
+      }
+
+
    }
 }

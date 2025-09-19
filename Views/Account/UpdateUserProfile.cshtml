@@ -7,8 +7,22 @@
    ViewData["Title"] = $"Atualizando {@Model?.UserName}";
 }
 
+@section Styles{
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+}
+
 <div class="container mt-5">
-   <h2 class="text-center mb-4">Atualizando @Model?.UserName</h2>
+
+   <div style="max-width: 500px;" class="container-fluid d-flex p-0 justify-content-between align-items-center">
+      <a href="/account/userprofile">
+         <i style="font-size:2rem;color:#0d6efd" class="bi bi-arrow-left"></i>
+      </a>
+
+      <h2>Atualizando @Model?.UserName</h2>
+
+      <span></span>
+   </div>
+   <br />
 
    <form method="post" asp-route="/account/UpdateUserProfile" class="mx-auto" style="max-width: 500px;">
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApplicationMVC.data;
 using WebApplicationMVC.data.extensions;
@@ -105,83 +106,12 @@ namespace WebApplicationMVC.Controllers
 
 
 
-
-
-      [Authorize("admin")]
-      [HttpGet("/account/admin/updateUser")]
-      public async Task<IActionResult> UpdateUser(string? userId)
-      {
-         if (string.IsNullOrEmpty(userId))
-         {
-            TempData.AddInfoMessage("O Id de usuario deve ser informado");
-            return View();
-         }
-
-
-         var user = await _accountRepository.GetUserById(userId);
-
-         if (user is null)
-         {
-            TempData.AddInfoMessage("Usuário não encotrado");
-            return View();
-         }
-
-
-         return View((UpdateUserModel)user);
-      }
-
-
-
-
-      [Authorize("admin")]
-      [HttpPost("/account/admin/updateUser")]
-      public async Task<IActionResult> UpdateUser(string? userId, UpdateUserModel updateUser)
-      {
-
-         if (string.IsNullOrEmpty(userId))
-         {
-            TempData.AddInfoMessage("O Id de usuario deve ser informado");
-            return View();
-         }
-
-         if (!Consts.UserTypes.Any(type => type == updateUser.UserType))
-         {
-            TempData.AddInfoMessage($"O tipo de usuario deve estar entre: {string.Join(", ", Consts.UserTypes)}");
-
-            return View(updateUser);
-         }
-
-
-         if (!ModelState.IsValid) return View(updateUser);
-
-
-         var result = await _accountRepository.UpdateUser(userId, updateUser);
-
-
-         if (result.IsT0)
-         {
-            TempData.AddInfoMessage($"Usuário {updateUser.UserName} atualizado com sucesso");
-
-            return View(updateUser);
-         }
-
-
-         AppError error = result.AsT1;
-
-         TempData.AddInfoMessage(error.Errors);
-
-         return View(updateUser);
-      }
-
-
-
-
       [Authorize, HttpGet]
       public async Task<IActionResult> UserProfile()
       {
          if (!User.TryGetUserId(out var userId))
          {
-            TempData.AddInfoMessage("O Id de usuário não pode ser obtido");
+            TempData.AddInfoMessage("Não foi possivel obter o Id de usuário");
             return View();
          }
 
@@ -205,7 +135,7 @@ namespace WebApplicationMVC.Controllers
       {
          if (!User.TryGetUserId(out var userId))
          {
-            TempData.AddInfoMessage("O Id de usuário não pode ser obtido");
+            TempData.AddInfoMessage("Não foi possivel obter o Id de usuário");
             return View();
          }
 
@@ -229,8 +159,8 @@ namespace WebApplicationMVC.Controllers
       {
          if (!User.TryGetUserId(out var userId))
          {
-            TempData.AddInfoMessage("O Id de usuário não pode ser obtido");
-            return View();
+            TempData.AddInfoMessage("Não foi possivel obter o Id de usuário");
+            return View(updateUser);
          }
 
 
@@ -253,9 +183,6 @@ namespace WebApplicationMVC.Controllers
             //redirecionar para atualizar o userName do cookie de sessão
             return Redirect("/auth/refresh?route=/account/userProfile");
 
-            //ou apenas retornar a view
-            //mas o nome de usuario que aparece no header da pagina ficará desatualizado
-            //return View(updateUser);
          }
 
          AppError error = result.AsT1;
@@ -270,10 +197,9 @@ namespace WebApplicationMVC.Controllers
 
 
       [Authorize, HttpGet]
-      public IActionResult UpdatePassword()
-      {
-         return View();
-      }
+      public IActionResult UpdatePassword() => View();
+
+
 
 
 
@@ -283,12 +209,11 @@ namespace WebApplicationMVC.Controllers
 
          if (!User.TryGetUserId(out var userId))
          {
-            TempData.AddInfoMessage("O Id de usuário não pode ser obtido");
+            TempData.AddInfoMessage("Não foi possivel obter o Id de usuário");
             return View(updateUserPassword);
          }
 
          if (!ModelState.IsValid) return View(updateUserPassword);
-
 
 
          var result = await _accountRepository.UpdateUserPassword(userId, updateUserPassword);
@@ -298,7 +223,7 @@ namespace WebApplicationMVC.Controllers
             TempData.AddInfoMessage("Senha atualizada com sucesso");
             return View(updateUserPassword);
          }
-         
+
 
          AppError appError = result.AsT1;
 
@@ -307,6 +232,50 @@ namespace WebApplicationMVC.Controllers
          return View(updateUserPassword);
 
       }
+
+
+
+
+      [Authorize, HttpGet]
+      public IActionResult DeleteAccount() => View();
+
+
+
+
+
+      [Authorize, HttpPost]
+      public async Task<IActionResult> DeleteAccount(DeleteAccountModel deleteAccountModel)
+      {
+         if (!ModelState.IsValid)
+         {
+            return View(deleteAccountModel);
+         }
+
+         if (!User.TryGetUserId(out var userId))
+         {
+            TempData.AddInfoMessage("Não foi possivel obter o Id de usuário");
+            return View(deleteAccountModel);
+         }
+
+
+         var result = await _accountRepository.DeleteUserAccount(userId, deleteAccountModel);
+
+         if (result.IsT0)
+         {
+            await HttpContext.SignOutAsync();
+            return View("AccountDeleted");
+         }
+
+
+         AppError appError = result.AsT1;
+
+         TempData.AddInfoMessage(appError.Errors);
+
+         return View(deleteAccountModel);
+
+      }
+
+
 
 
 

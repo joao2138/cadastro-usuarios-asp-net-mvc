@@ -1,7 +1,11 @@
-﻿@model IEnumerable<UserViewModel>
+﻿@using WebApplicationMVC.data
+@model IEnumerable<UserViewModel>
 @{
    ViewData["Title"] = "Listar de Usuários";
+
    bool isAdmin = User.Identity?.IsAuthenticated == true && User.IsInRole("admin");
+
+   var userId = User.Claims.FirstOrDefault(t => t.Type == Consts.UserId)?.Value ?? "";
 }
 
 @section Styles{
@@ -59,16 +63,19 @@
                      @if (isAdmin)
                      {
                         <td>
-                           <a href="/account/admin/updateUser?userId=@user.Id"
-                              class="btn btn-sm btn-primary me-2"
-                              title="Editar">
-                              <i class="bi bi-pencil"></i>
-                           </a>
-                           <a href="#"
-                              class="btn btn-sm btn-danger"
-                              title="Excluir">
-                              <i class="bi bi-trash"></i>
-                           </a>
+                           @if (userId != user.Id)
+                           {
+                              <a href="/account/admin/updateUser?userId=@user.Id"
+                                 class="btn btn-sm btn-primary me-2"
+                                 title="Editar">
+                                 <i class="bi bi-pencil"></i>
+                              </a>
+                              <a href="/account/admin/delete?userId=@user.Id"
+                                 class="btn btn-sm btn-danger"
+                                 title="Excluir">
+                                 <i class="bi bi-trash"></i>
+                              </a>
+                           }                  
                         </td>
                      }
                   </tr>
