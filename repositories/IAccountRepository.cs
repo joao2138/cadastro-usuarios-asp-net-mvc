@@ -24,5 +24,16 @@ namespace WebApplicationMVC.repositories
 
       public Task<OneOf<int, AppError>> UpdateUserPassword(string userId, UpdateUserPasswordModel passwordModel);
 
+
+
+      public Task<OneOf<int, AppError>> AdminDeleteUserAccount(
+       string idToDelete,
+       DeleteAccountModel deleteUser,
+       string adminId);
+
+
+
+      public Task<OneOf<int, AppError>> DeleteUserAccount(string idToDelete, DeleteAccountModel deleteUser);
+
    }
 }

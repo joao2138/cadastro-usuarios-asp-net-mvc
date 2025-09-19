@@ -1,0 +1,59 @@
+﻿@using WebApplicationMVC.Models.request
+@using WebApplicationMVC.data
+@model DeleteAccountModel?
+@{
+   ViewData["Title"] = "Excluir conta";
+}
+
+@section Styles {
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+}
+
+
+<div class="container mt-5">
+   <div style="max-width: 500px;" class="container-fluid d-flex p-0 justify-content-between align-items-center">
+      <a href="/account/userprofile">
+         <i style="font-size:2rem;color:#0d6efd" class="bi bi-arrow-left"></i>
+      </a>
+
+      <h2 class="text-center">Excluir conta</h2>
+
+      <span></span>
+   </div>
+
+   <br /><br />
+
+
+   <h5 class="text-center">Tem certeza que deseja excluir sua conta?</h5>
+
+
+   <p class="text-center text-danger fw-bold">Essa ação não poderá ser desfeita</p>
+   <br />
+
+   <p class="text-center">Para continuar, insira sua senha</p>
+
+   <form id="deleteAccountForm" method="post" asp-route="/account/DeleteAccount" class="mx-auto" style="max-width: 500px;">
+
+      <div class="mb-3">
+         <label asp-for="Password" class="form-label">Senha</label>
+         <input asp-for="Password" class="form-control" />
+         <span asp-validation-for="Password" class="text-danger"></span>
+      </div>
+
+      <div class="mb-3">
+         <label asp-for="ConfirmPassword" class="form-label">Confirme a senha</label>
+         <input asp-for="ConfirmPassword" class="form-control" />
+         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+      </div>
+
+
+      <button type="submit" class="btn btn-danger w-100">Excluir conta</button>
+   </form>
+</div>
+
+
+@section Scripts {
+   <partial name="_ValidationScriptsPartial" />
+
+
+}

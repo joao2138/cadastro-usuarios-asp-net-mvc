@@ -1,0 +1,19 @@
+﻿@{
+   ViewData["Title"] = "Conta excluída";
+
+   var redirect = ViewData["redirect"]?.ToString() ?? "/";
+
+   var message = redirect == "/" ? "Voltar a Home" : "Voltar";
+
+}
+
+<div class="card shadow-sm">
+   <div class="card-body d-flex flex-column align-items-center">
+      <br /><br />
+      <h2 class="card-title text-primary text-center">Conta apagada com sucesso</h2>
+      <br /><br />
+
+      <button type="button" onclick="window.location.href='@redirect'" class="btn btn-outline-dark w-25">@message</button>
+      
+   </div>
+</div>
