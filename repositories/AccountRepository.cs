@@ -323,8 +323,6 @@ namespace WebApplicationMVC.repositories
 
          using var transaction = await conn.BeginTransactionAsync();
 
-         int rows = 0;
-
          try
          {
 
@@ -333,7 +331,7 @@ namespace WebApplicationMVC.repositories
                return new AppError(["A senha do administrador está incorreta"]);
             }
 
-            rows = await DeleteUser(idToDelete, conn, transaction);
+            int rows = await DeleteUser(idToDelete, conn, transaction);
 
             if (rows == 1)
             {
@@ -354,7 +352,7 @@ namespace WebApplicationMVC.repositories
             return new AppError(["Ocorreu um erro ao deletar a conta do usuário"]);
          }
 
-         
+
       }
 
 
@@ -368,8 +366,6 @@ namespace WebApplicationMVC.repositories
 
          using var transaction = await conn.BeginTransactionAsync();
 
-         int rows = 0;
-
          try
          {
 
@@ -378,7 +374,7 @@ namespace WebApplicationMVC.repositories
                return new AppError(["A senha está incorreta"]);
             }
 
-            rows = await DeleteUser(idToDelete, conn, transaction);
+            int rows = await DeleteUser(idToDelete, conn, transaction);
 
             if (rows == 1)
             {
@@ -427,7 +423,7 @@ namespace WebApplicationMVC.repositories
          IDbConnection conn,
          IDbTransaction? transaction = null)
       {
-         var currentHash = await conn.QuerySingleAsync<string>(
+         var currentHash = await conn.QueryFirstOrDefaultAsync<string>(
             """
             SELECT password_hash FROM users
             WHERE id = @userId
